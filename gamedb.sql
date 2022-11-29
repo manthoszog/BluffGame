@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `game_status`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `game_status` (
-  `status` enum('not active','initialized','started','ended','aborded') NOT NULL DEFAULT 'not active',
+  `status` enum('not active','initialized','started','ended','aborted') NOT NULL DEFAULT 'not active',
   `player_turn` enum('player1','player2') DEFAULT NULL,
   `result` enum('player1','player2') DEFAULT NULL,
   `last_change` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
@@ -176,7 +176,7 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `onoma` enum('player1','player2') NOT NULL,
   `token` varchar(100) DEFAULT NULL,
-  `last_action` timestamp NULL DEFAULT NULL,
+  `last_action` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`onoma`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -289,4 +289,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-11-13 20:02:21
+-- Dump completed on 2022-11-29 17:33:32
