@@ -11,8 +11,29 @@
                 case '':
                 case null:
                     if($method == 'GET'){
-                        $mysqli;
-                        $query = 'select * from player1_karta';
+                        echo "Player 1 Cards: \n";
+                        $statement = $mysqli->prepare('select * from player1_karta');
+                        $statement->execute();
+                        $result = $statement->get_result();
+                        header('Content-type: application/json');
+                        print json_encode($result->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
+
+                        echo "Player 2 Cards: \n";
+                        $st2 = $mysqli->prepare('select * from player2_karta');
+                        $st2->execute();
+                        $result2 = $st2->get_result();
+                        header('Content-type: application/json');
+                        print json_encode($result2->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
+
+                        echo "Cards on table: \n";
+                        $st3 = $mysqli->prepare('select * from stoiva_karta');
+                        $st3->execute();
+                        $result3 = $st3->get_result();
+                        header('Content-type: application/json');
+                        print json_encode($result3->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
+                    }
+                    else if($method == 'POST') {
+                        $mysqli->query('call clean_karta()');
                     }
                     break;
             }
