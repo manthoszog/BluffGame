@@ -62,7 +62,20 @@
             }
             break;
         case 'players':
-            
+            switch($req2=array_shift($request)){
+                case 'player1':
+                case 'player2':
+                    if($method =='PUT'){
+                        //setUser
+                    }
+                    else{
+                        header('HTTP/1.1 405 Method Not Allowed');
+                    }
+                    break;
+                default:
+                    header("HTTP/1.1 404 Not Found"); 
+                    break;
+            }
             break;
         default: 
             header("HTTP/1.1 404 Not Found");
