@@ -84,7 +84,50 @@
                     $st6->bind_param('sss',$username,$username);
                     $st6->execute();
                 
-                    //update game status
+                    $st8 = $mysqli->prepare('select * from game_status');
+                    $st8->execute();
+                    $res8 = $st8->get_result();
+                    $status = $res8->fetch_assoc();
+                    
+                    
+                    $new_status=null;
+                    $new_turn=null;
+                    
+                    $st9=$mysqli->prepare('select count(*) as aborted from user where last_action < (NOW() - INTERVAL 5 MINUTE)');
+                    $st9->execute();
+                    $res9 = $st9->get_result();
+                    $aborted = $res9->fetch_assoc()['aborted'];
+                    if($aborted > 0) {
+                        $st10 = $mysqli->prepare('delete from user where last_action < (NOW() - INTERVAL 5 MINUTE)');
+                        $st10->execute();
+                        if($status['status']=='started') {
+                            $new_status='aborted';
+                        }
+                    }
+
+                    $st11 = $mysqli->prepare('select count(*) as c from user');
+                    $st11->execute();
+                    $res11 = $st11->get_result();
+                    $active_players = $res11->fetch_assoc()['c'];
+
+                    switch($active_players) {
+                        case 0: 
+                            $new_status='not active'; 
+                            break;
+                        case 1: 
+                            $new_status='initialized'; 
+                            break;
+                        case 2: 
+                            $new_status='started'; 
+                            if($status['player_turn']==null) {
+                                $new_turn='player1';
+                            }
+                            break;
+                    }
+
+                    $st12 = $mysqli->prepare('update game_status set status=?, player_turn=?');
+                    $st12->bind_param('ss',$new_status,$new_turn);
+                    $st12->execute();
 
                     $st7 = $mysqli->prepare('select * from user where onoma=?');
                     $st7->bind_param('s',$username);
