@@ -7,36 +7,52 @@
 
     switch($req=array_shift($request)){
         case 'cards':
-            if($method == 'GET'){
-                echo "Player 1 Cards: \n";
-                $statement = $mysqli->prepare('select * from player1_karta');
-                $statement->execute();
-                $result = $statement->get_result();
-                header('Content-type: application/json');
-                print json_encode($result->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
+            switch($req3=array_shift($request)){
+                case '':
+                case null:
+                    if($method == 'GET'){
+                        echo "Player 1 Cards: \n";
+                        $statement = $mysqli->prepare('select * from player1_karta');
+                        $statement->execute();
+                        $result = $statement->get_result();
+                        header('Content-type: application/json');
+                        print json_encode($result->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
 
-                echo "Player 2 Cards: \n";
-                $st2 = $mysqli->prepare('select * from player2_karta');
-                $st2->execute();
-                $result2 = $st2->get_result();
-                header('Content-type: application/json');
-                print json_encode($result2->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
+                        echo "Player 2 Cards: \n";
+                        $st2 = $mysqli->prepare('select * from player2_karta');
+                        $st2->execute();
+                        $result2 = $st2->get_result();
+                        header('Content-type: application/json');
+                        print json_encode($result2->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
 
-                echo "Cards on table: \n";
-                $st3 = $mysqli->prepare('select * from stoiva_karta');
-                $st3->execute();
-                $result3 = $st3->get_result();
-                header('Content-type: application/json');
-                print json_encode($result3->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
-            }
-            else if($method == 'POST') {
-                $mysqli->query('call clean_karta()');
-            }
-            else if($method == 'PUT'){
-                $mysqli->query('call moirasma_kartas()');
-            }
-            else{
-                header('HTTP/1.1 405 Method Not Allowed');
+                        echo "Cards on table: \n";
+                        $st3 = $mysqli->prepare('select * from stoiva_karta');
+                        $st3->execute();
+                        $result3 = $st3->get_result();
+                        header('Content-type: application/json');
+                        print json_encode($result3->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
+                    }
+                    else if($method == 'POST') {
+                        $mysqli->query('call clean_karta()');
+                    }
+                    else if($method == 'PUT'){
+                        $mysqli->query('call moirasma_kartas()');
+                    }
+                    else{
+                        header('HTTP/1.1 405 Method Not Allowed');
+                    }
+                    break;
+                case 'play':
+                    if($method == 'PUT') {
+
+                    }
+                    else{
+                        header('HTTP/1.1 405 Method Not Allowed'); 
+                    }
+                    break;
+                default: 
+                    header("HTTP/1.1 404 Not Found");
+                break;
             }
             break;
         case 'status': 
