@@ -44,7 +44,47 @@
                     break;
                 case 'play':
                     if($method == 'PUT') {
+                        if($input['token'] == null || $input['token'] == '') {
+                            header("HTTP/1.1 400 Bad Request");
+                            print json_encode(['errormesg'=>"token is not set."]);
+                            exit;
+                        }
+                        
+                        $name = null;
+                        if($input['token'] == null){
+                            $name = null;
+                        }
+                        else{
+                            $st13 = $mysqli->prepare('select * from user where token=?');
+                            $st13->bind_param('ssss',$input['token']);
+                            $st13->execute();
+                            $res13 = $st13->get_result();
+                            if($row=$res13->fetch_assoc()) {
+                                $name = $row['onoma'];
+                            }
+                        }
 
+                        if($name == null ) {
+                            header("HTTP/1.1 400 Bad Request");
+                            print json_encode(['errormesg'=>"You are not a player of this game."]);
+                            exit;
+                        }
+                        
+                        $st14 = $mysqli->prepare('select * from game_status');
+                        $st14->execute();
+                        $res14 = $st14->get_result();
+                        $status2 = $res14->fetch_assoc();
+
+                        if($status2['status']!='started') {
+                            header("HTTP/1.1 400 Bad Request");
+                            print json_encode(['errormesg'=>"Game is not in action."]);
+                            exit;
+                        }
+                        if($status2['player_turn']!=$name) {
+                            header("HTTP/1.1 400 Bad Request");
+                            print json_encode(['errormesg'=>"It is not your turn."]);
+                            exit;
+                        }
                     }
                     else{
                         header('HTTP/1.1 405 Method Not Allowed'); 
@@ -52,7 +92,7 @@
                     break;
                 default: 
                     header("HTTP/1.1 404 Not Found");
-                break;
+                    break;
             }
             break;
         case 'status': 
