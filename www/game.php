@@ -21,21 +21,24 @@
                 case '':
                 case null:
                     if($method == 'GET'){
-                        echo "Player 1 Cards: \n";
+                        header('Content-type: application/json');
+                        print json_encode(['mess1'=>"Player 1 Cards: \n"]);
                         $statement = $mysqli->prepare('select * from player1_karta');
                         $statement->execute();
                         $result = $statement->get_result();
                         header('Content-type: application/json');
                         print json_encode($result->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
 
-                        echo "Player 2 Cards: \n";
+                        header('Content-type: application/json');
+                        print json_encode(['mess2'=>"Player 2 Cards: \n"]);
                         $st2 = $mysqli->prepare('select * from player2_karta');
                         $st2->execute();
                         $result2 = $st2->get_result();
                         header('Content-type: application/json');
                         print json_encode($result2->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
 
-                        echo "Cards on table: \n";
+                        header('Content-type: application/json');
+                        print json_encode(['mess3'=>"Cards on table: \n"]);
                         $st3 = $mysqli->prepare('select * from stoiva_karta');
                         $st3->execute();
                         $result3 = $st3->get_result();
@@ -106,7 +109,25 @@
 
                         $st17 = $mysqli->prepare("delete from $name_sql where id in (select id from stoiva_karta)");
                         $st17->execute();
-                        
+
+                        header('Content-type: application/json');
+                        print json_encode(['mess4'=>"Opponent: Bluff, yes or no? \n"]);
+
+                        header('Content-type: application/json');
+                        $answer = json_decode(file_get_contents('php://input'),true);
+                        switch($answer['bluff']){
+                            case 'yes':
+
+                                break;
+                            case 'no':
+
+                                break;
+                            default:
+                                header("HTTP/1.1 400 Bad Request");
+                                print json_encode(['errormesg'=>"Wrong answer"]);
+                                exit;
+                        }
+
                         //move ends
                     }
                     else{
