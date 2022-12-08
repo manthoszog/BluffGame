@@ -92,6 +92,22 @@
                         }
 
                         //move cards
+
+                        $name_sql = "$name" . '_karta';
+                        $st15 = $mysqli->prepare("select * from $name_sql where id=?");
+                        $st15->bind_param('sssss',$input['id1']);
+                        $st15->execute();
+                        $res15 = $st15->get_result();
+                        $row2 = $res15->fetch_assoc();
+                        
+                        $st16 = $mysqli->prepare('insert into stoiva_karta(id,arithmos,xroma,symvolo) values(?,?,?,?)');
+                        $st16->bind_param('ssssss',$row2['id'],$row2['arithmos'],$row2['xroma'],$row2['symvolo']);
+                        $st16->execute();
+
+                        $st17 = $mysqli->prepare("delete from $name_sql where id in (select id from stoiva_karta)");
+                        $st17->execute();
+                        
+                        //move ends
                     }
                     else{
                         header('HTTP/1.1 405 Method Not Allowed'); 
