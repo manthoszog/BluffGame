@@ -5,6 +5,16 @@
 	$request = explode('/', trim($_SERVER['PATH_INFO'],'/'));
 	$input = json_decode(file_get_contents('php://input'),true);
 
+    if($input==null) {
+        $input=[];
+    }
+    if(isset($_SERVER['HTTP_X_TOKEN'])) {
+        $input['token'] = $_SERVER['HTTP_X_TOKEN'];
+    } 
+    else {
+        $input['token'] = '';
+    }
+
     switch($req=array_shift($request)){
         case 'cards':
             switch($req3=array_shift($request)){
@@ -51,17 +61,12 @@
                         }
                         
                         $name = null;
-                        if($input['token'] == null){
-                            $name = null;
-                        }
-                        else{
-                            $st13 = $mysqli->prepare('select * from user where token=?');
-                            $st13->bind_param('ssss',$input['token']);
-                            $st13->execute();
-                            $res13 = $st13->get_result();
-                            if($row=$res13->fetch_assoc()) {
-                                $name = $row['onoma'];
-                            }
+                        $st13 = $mysqli->prepare('select * from user where token=?');
+                        $st13->bind_param('ssss',$input['token']);
+                        $st13->execute();
+                        $res13 = $st13->get_result();
+                        if($row=$res13->fetch_assoc()) {
+                            $name = $row['onoma'];
                         }
 
                         if($name == null ) {
@@ -85,6 +90,8 @@
                             print json_encode(['errormesg'=>"It is not your turn."]);
                             exit;
                         }
+
+                        //move cards
                     }
                     else{
                         header('HTTP/1.1 405 Method Not Allowed'); 
