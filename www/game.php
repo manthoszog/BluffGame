@@ -125,9 +125,47 @@
 
                         header('Content-type: application/json');
                         $answer = json_decode(file_get_contents('php://input'),true);
+                        $name2_sql = "$name" . '_win()';
                         switch($answer['bluff']){
                             case 'yes':
+                                if(($input['id1'] == $input['id1_bluff']) &&  ($input['id2'] == $input['id2_bluff'])){
+                                    $mysqli->query("call $name2_sql");
 
+                                    if($name == 'player1'){
+                                        $name = 'player2';
+                                        $st18 = $mysqli->prepare('update game_status set player_turn=?');
+                                        $st18->bind_param('z',$name);
+                                        $st18->execute();
+                                    }
+                                    else if($name == 'player2'){
+                                        $name = 'player1';
+                                        $st18 = $mysqli->prepare('update game_status set player_turn=?');
+                                        $st18->bind_param('z',$name);
+                                        $st18->execute();
+                                    }
+                                }
+                                else{
+                                    switch($name){
+                                        case 'player1':
+                                            $mysqli->query('call player2_win()');
+                                            break;
+                                        case 'player2':
+                                            $mysqli->query('call player1_win()');
+                                            break;
+                                    }
+                                    if($name == 'player1'){
+                                        $name = 'player2';
+                                        $st18 = $mysqli->prepare('update game_status set player_turn=?');
+                                        $st18->bind_param('z',$name);
+                                        $st18->execute();
+                                    }
+                                    else if($name == 'player2'){
+                                        $name = 'player1';
+                                        $st18 = $mysqli->prepare('update game_status set player_turn=?');
+                                        $st18->bind_param('z',$name);
+                                        $st18->execute();
+                                    }
+                                }
                                 break;
                             case 'no':
                                 if($name == 'player1'){
