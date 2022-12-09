@@ -107,9 +107,19 @@
                         $st16->bind_param('ssssss',$row2['id'],$row2['arithmos'],$row2['xroma'],$row2['symvolo']);
                         $st16->execute();
 
+                        $st19 = $mysqli->prepare("select * from $name_sql where id=?");
+                        $st19->bind_param('zz',$input['id2']);
+                        $st19->execute();
+                        $res19 = $st19->get_result();
+                        $row3 = $res19->fetch_assoc();
+                        
+                        $st20 = $mysqli->prepare('insert into stoiva_karta(id,arithmos,xroma,symvolo) values(?,?,?,?)');
+                        $st20->bind_param('zzz',$row3['id'],$row3['arithmos'],$row3['xroma'],$row3['symvolo']);
+                        $st20->execute();
+                        
                         $st17 = $mysqli->prepare("delete from $name_sql where id in (select id from stoiva_karta)");
                         $st17->execute();
-
+                        
                         header('Content-type: application/json');
                         print json_encode(['mess4'=>"Opponent: Bluff, yes or no? \n"]);
 
