@@ -120,7 +120,18 @@
 
                                 break;
                             case 'no':
-
+                                if($name == 'player1'){
+                                    $name = 'player2';
+                                    $st18 = $mysqli->prepare('update game_status set player_turn=?');
+                                    $st18->bind_param('z',$name);
+                                    $st18->execute();
+                                }
+                                else if($name == 'player2'){
+                                    $name = 'player1';
+                                    $st18 = $mysqli->prepare('update game_status set player_turn=?');
+                                    $st18->bind_param('z',$name);
+                                    $st18->execute();
+                                }
                                 break;
                             default:
                                 header("HTTP/1.1 400 Bad Request");
