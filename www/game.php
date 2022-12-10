@@ -22,7 +22,7 @@
                 case null:
                     if($method == 'GET'){
                         header('Content-type: application/json');
-                        print json_encode(['mess1'=>"Player 1 Cards: \n"]);
+                        print json_encode(['Message'=>"Player 1 Cards:"]);
                         $statement = $mysqli->prepare('select * from player1_karta');
                         $statement->execute();
                         $result = $statement->get_result();
@@ -30,7 +30,7 @@
                         print json_encode($result->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
 
                         header('Content-type: application/json');
-                        print json_encode(['mess2'=>"Player 2 Cards: \n"]);
+                        print json_encode(['Message'=>"Player 2 Cards:"]);
                         $st2 = $mysqli->prepare('select * from player2_karta');
                         $st2->execute();
                         $result2 = $st2->get_result();
@@ -38,7 +38,7 @@
                         print json_encode($result2->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
 
                         header('Content-type: application/json');
-                        print json_encode(['mess3'=>"Cards on table: \n"]);
+                        print json_encode(['Message'=>"Cards on table:"]);
                         $st3 = $mysqli->prepare('select * from stoiva_karta');
                         $st3->execute();
                         $result3 = $st3->get_result();
@@ -59,7 +59,7 @@
                     if($method == 'PUT') {
                         if($input['token'] == null || $input['token'] == '') {
                             header("HTTP/1.1 400 Bad Request");
-                            print json_encode(['errormesg'=>"token is not set."]);
+                            print json_encode(['errormesg'=>"Token is not set."]);
                             exit;
                         }
                         
@@ -122,7 +122,7 @@
                         $st17->execute();
                         
                         header('Content-type: application/json');
-                        print json_encode(['mess4'=>"Opponent: Bluff, yes or no? \n"]);
+                        print json_encode(['Message'=>"Opponent: Bluff, yes or no? \n"]);
 
                         header('Content-type: application/json');
                         $answer = json_decode(file_get_contents('php://input'),true);
@@ -203,14 +203,14 @@
                         if($p1count['c'] == 0){
                             $mysqli->query("update game_status set status='ended',player_turn=null,result='player1'");
                             header('Content-type: application/json');
-                            print json_encode(['mess5'=>"Winner: Player1 \n"]);
+                            print json_encode(['Message'=>"Winner: Player1"]);
                             exit;
                         }
                         
                         if($p2count['c'] == 0){
                             $mysqli->query("update game_status set status='ended',player_turn=null,result='player2'");
                             header('Content-type: application/json');
-                            print json_encode(['mess6'=>"Winner: Player2 \n"]);
+                            print json_encode(['Message'=>"Winner: Player2"]);
                             exit;
                         }
 
