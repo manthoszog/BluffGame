@@ -12,7 +12,17 @@
         $input['token'] = $_SERVER['HTTP_X_TOKEN'];
     } 
     else {
-        $input['token'] = '';
+        $st23 = $mysqli->prepare('select player_turn from game_status');
+        $st23->execute();
+        $res23 = $st23->get_result();
+        $turn = $res23->fetch_assoc();
+        
+        $st24 = $mysqli->prepare('select token from user where onoma=?');
+        $st24->bind_param('s',$turn['player_turn']);
+        $st24->execute();
+        $res24 = $st24->get_result();
+        $t = $res24->fetch_assoc();
+        $input['token'] = $t['token'];
     }
 
     switch($req=array_shift($request)){
@@ -122,7 +132,7 @@
                         $st17->execute();
                         
                         header('Content-type: application/json');
-                        print json_encode(['Message'=>"Opponent: Bluff, yes or no? \n"]);
+                        print json_encode(['Message'=>"Opponent: Bluff, yes or no?"]);
 
                         header('Content-type: application/json');
                         $answer = json_decode(file_get_contents('php://input'),true);
