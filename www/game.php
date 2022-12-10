@@ -94,6 +94,7 @@
                             exit;
                         }
 
+
                         //move cards
 
                         $name_sql = "$name" . '_karta';
@@ -188,6 +189,32 @@
                         }
 
                         //move ends
+
+                        //check if game ended
+
+                        $st21 = $mysqli->query('select count(*) as c from player1_karta');
+                        $res21 = $st21->get_result();
+                        $p1count = $res21->fetch_assoc();
+
+                        $st22 = $mysqli->query('select count(*) as c from player2_karta');
+                        $res22 = $st22->get_result();
+                        $p2count = $res22->fetch_assoc();
+
+                        if($p1count['c'] == 0){
+                            $mysqli->query("update game_status set status='ended',player_turn=null,result='player1'");
+                            header('Content-type: application/json');
+                            print json_encode(['mess5'=>"Winner: Player1 \n"]);
+                            exit;
+                        }
+                        
+                        if($p2count['c'] == 0){
+                            $mysqli->query("update game_status set status='ended',player_turn=null,result='player2'");
+                            header('Content-type: application/json');
+                            print json_encode(['mess6'=>"Winner: Player2 \n"]);
+                            exit;
+                        }
+
+                        //check ends
                     }
                     else{
                         header('HTTP/1.1 405 Method Not Allowed'); 
