@@ -65,7 +65,7 @@
                         
                         $name = null;
                         $st13 = $mysqli->prepare('select * from user where token=?');
-                        $st13->bind_param('ssss',$input['token']);
+                        $st13->bind_param('s',$input['token']);
                         $st13->execute();
                         $res13 = $st13->get_result();
                         if($row=$res13->fetch_assoc()) {
@@ -99,23 +99,23 @@
 
                         $name_sql = "$name" . '_karta';
                         $st15 = $mysqli->prepare("select * from $name_sql where id=?");
-                        $st15->bind_param('sssss',$input['id1']);
+                        $st15->bind_param('i',$input['id1']);
                         $st15->execute();
                         $res15 = $st15->get_result();
                         $row2 = $res15->fetch_assoc();
                         
                         $st16 = $mysqli->prepare('insert into stoiva_karta(id,arithmos,xroma,symvolo) values(?,?,?,?)');
-                        $st16->bind_param('ssssss',$row2['id'],$row2['arithmos'],$row2['xroma'],$row2['symvolo']);
+                        $st16->bind_param('isss',$row2['id'],$row2['arithmos'],$row2['xroma'],$row2['symvolo']);
                         $st16->execute();
 
                         $st19 = $mysqli->prepare("select * from $name_sql where id=?");
-                        $st19->bind_param('zz',$input['id2']);
+                        $st19->bind_param('i',$input['id2']);
                         $st19->execute();
                         $res19 = $st19->get_result();
                         $row3 = $res19->fetch_assoc();
                         
                         $st20 = $mysqli->prepare('insert into stoiva_karta(id,arithmos,xroma,symvolo) values(?,?,?,?)');
-                        $st20->bind_param('zzz',$row3['id'],$row3['arithmos'],$row3['xroma'],$row3['symvolo']);
+                        $st20->bind_param('isss',$row3['id'],$row3['arithmos'],$row3['xroma'],$row3['symvolo']);
                         $st20->execute();
                         
                         $st17 = $mysqli->prepare("delete from $name_sql where id in (select id from stoiva_karta)");
@@ -135,13 +135,13 @@
                                     if($name == 'player1'){
                                         $name = 'player2';
                                         $st18 = $mysqli->prepare('update game_status set player_turn=?');
-                                        $st18->bind_param('z',$name);
+                                        $st18->bind_param('s',$name);
                                         $st18->execute();
                                     }
                                     else if($name == 'player2'){
                                         $name = 'player1';
                                         $st18 = $mysqli->prepare('update game_status set player_turn=?');
-                                        $st18->bind_param('z',$name);
+                                        $st18->bind_param('s',$name);
                                         $st18->execute();
                                     }
                                 }
@@ -157,13 +157,13 @@
                                     if($name == 'player1'){
                                         $name = 'player2';
                                         $st18 = $mysqli->prepare('update game_status set player_turn=?');
-                                        $st18->bind_param('z',$name);
+                                        $st18->bind_param('s',$name);
                                         $st18->execute();
                                     }
                                     else if($name == 'player2'){
                                         $name = 'player1';
                                         $st18 = $mysqli->prepare('update game_status set player_turn=?');
-                                        $st18->bind_param('z',$name);
+                                        $st18->bind_param('s',$name);
                                         $st18->execute();
                                     }
                                 }
@@ -172,13 +172,13 @@
                                 if($name == 'player1'){
                                     $name = 'player2';
                                     $st18 = $mysqli->prepare('update game_status set player_turn=?');
-                                    $st18->bind_param('z',$name);
+                                    $st18->bind_param('s',$name);
                                     $st18->execute();
                                 }
                                 else if($name == 'player2'){
                                     $name = 'player1';
                                     $st18 = $mysqli->prepare('update game_status set player_turn=?');
-                                    $st18->bind_param('z',$name);
+                                    $st18->bind_param('s',$name);
                                     $st18->execute();
                                 }
                                 break;
@@ -267,7 +267,7 @@
                     }
                 
                     $st6 = $mysqli->prepare('insert into user(onoma, token) values(?, md5(CONCAT( ?, NOW())))');
-                    $st6->bind_param('sss',$username,$username);
+                    $st6->bind_param('ss',$username,$username);
                     $st6->execute();
                 
                     $st8 = $mysqli->prepare('select * from game_status');
