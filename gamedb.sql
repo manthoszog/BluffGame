@@ -36,6 +36,7 @@ CREATE TABLE `game_status` (
 
 LOCK TABLES `game_status` WRITE;
 /*!40000 ALTER TABLE `game_status` DISABLE KEYS */;
+INSERT INTO `game_status` VALUES ('not active',NULL,NULL,'2022-12-10 15:25:16');
 /*!40000 ALTER TABLE `game_status` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -205,9 +206,10 @@ UNLOCK TABLES;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `clean_karta`()
 begin
-	replace into karta select * from karta_empty;
+	delete from karta;
+    insert into karta select * from karta_empty;
     update game_status set status = 'not active', player_turn = null, result = null;
-    update user set onoma = null, token = null;
+    delete from user;
     delete from player1_karta;
     delete from player2_karta;
     delete from stoiva_karta;
@@ -289,4 +291,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-11-29 17:33:32
+-- Dump completed on 2022-12-10 17:54:47
