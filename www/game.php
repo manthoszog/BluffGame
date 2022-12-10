@@ -8,7 +8,7 @@
     if($input==null) {
         $input=[];
     }
-    if(isset($_SERVER['HTTP_X_TOKEN'])) {
+    else if(isset($_SERVER['HTTP_X_TOKEN'])) {
         $input['token'] = $_SERVER['HTTP_X_TOKEN'];
     } 
     else {
@@ -21,8 +21,8 @@
         $st24->bind_param('s',$turn['player_turn']);
         $st24->execute();
         $res24 = $st24->get_result();
-        $t = $res24->fetch_assoc();
-        $input['token'] = $t['token'];
+        $t2 = $res24->fetch_assoc();
+        $input['token'] = $t2['token'];
     }
 
     switch($req=array_shift($request)){
