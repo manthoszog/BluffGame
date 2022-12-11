@@ -250,31 +250,23 @@
                                     }
                                 }
                                 else{
-                                    switch($name){
+                                    switch($name2){
                                         case 'player1':
-                                            $mysqli->query('call player2_win()');
-                                            break;
-                                        case 'player2':
                                             $mysqli->query('call player1_win()');
                                             break;
+                                        case 'player2':
+                                            $mysqli->query('call player2_win()');
+                                            break;
                                     }
-                                    if($name == 'player1'){
-                                        $name = 'player2';
-                                        $st18 = $mysqli->prepare('update game_status set player_turn=?');
-                                        $st18->bind_param('s',$name);
-                                        $st18->execute();
-                                    }
-                                    else if($name == 'player2'){
-                                        $name = 'player1';
-                                        $st18 = $mysqli->prepare('update game_status set player_turn=?');
-                                        $st18->bind_param('s',$name);
-                                        $st18->execute();
-                                    }
+                                    /* to paixnidi synexizetai, 
+                                    o idios paiktis prepei tora 
+                                    na rixei xartia me to PUT /cards/play
+                                    */
                                 }
                                 break;
                             case 'no':
                                 /* to paixnidi synexizetai, 
-                                o paiktis prepei tora 
+                                o idios paiktis prepei tora 
                                 na rixei xartia me to PUT /cards/play
                                 */
                                 exit;
