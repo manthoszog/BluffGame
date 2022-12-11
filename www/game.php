@@ -228,26 +228,23 @@
                             print json_encode(['errormesg'=>"It is not your turn."]);
                             exit;
                         }
-
-                        $name2_sql = "$name2" . '_win()';
                         
                         switch($answer['bluff']){
                             case 'yes':
                                 if(($input['id1'] == $input['id1_bluff']) &&  ($input['id2'] == $input['id2_bluff'])){
+                                    if($name2 == 'player1'){
+                                        $name2 = 'player2';
+                                    }
+                                    else if($name2 == 'player2'){
+                                        $name2 = 'player1';
+                                    }
+                                    $name2_sql = "$name2" . '_win()';
                                     $mysqli->query("call $name2_sql");
 
-                                    if($name == 'player1'){
-                                        $name = 'player2';
-                                        $st18 = $mysqli->prepare('update game_status set player_turn=?');
-                                        $st18->bind_param('s',$name);
-                                        $st18->execute();
-                                    }
-                                    else if($name == 'player2'){
-                                        $name = 'player1';
-                                        $st18 = $mysqli->prepare('update game_status set player_turn=?');
-                                        $st18->bind_param('s',$name);
-                                        $st18->execute();
-                                    }
+                                    /* to paixnidi synexizetai, 
+                                    o idios paiktis prepei tora 
+                                    na rixei xartia me to PUT /cards/play
+                                    */
                                 }
                                 else{
                                     switch($name2){
