@@ -127,16 +127,22 @@
                         $st20 = $mysqli->prepare('insert into stoiva_karta(id,arithmos,xroma,symvolo) values(?,?,?,?)');
                         $st20->bind_param('isss',$row3['id'],$row3['arithmos'],$row3['xroma'],$row3['symvolo']);
                         $st20->execute();
+
+                        $st27 = $mysqli->prepare("select arithmos,xroma,symvolo from $name_sql where id=? or id=?");
+                        $st27->bind_param('ii',$input['id1_bluff'],$input['id2_bluff']);
+                        $st27->execute();
+                        $res27 = $st27->get_result();
+                        $bluff_cards = $res27->fetch_assoc();
                         
                         $st17 = $mysqli->prepare("delete from $name_sql where id in (select id from stoiva_karta)");
                         $st17->execute();
-                        
-                        header('Content-type: application/json');
-                        print json_encode(['Message'=>"Opponent: Bluff, yes or no?"]);
 
                         header('Content-type: application/json');
-                        $answer = json_decode(file_get_contents('php://input'),true);
-                        $name2_sql = "$name" . '_win()';
+                        print json_encode(['Message'=>"$name cards: $bluff_cards"]);
+                        print json_encode(['Message'=>"Opponent: Bluff, yes or no?"]);
+
+                        
+                        
                         switch($answer['bluff']){
                             case 'yes':
                                 if(($input['id1'] == $input['id1_bluff']) &&  ($input['id2'] == $input['id2_bluff'])){
@@ -225,6 +231,54 @@
                         }
 
                         //check ends
+                    }
+                    else{
+                        header('HTTP/1.1 405 Method Not Allowed'); 
+                    }
+                    break;
+                case 'bluff':
+                    $answer = json_decode(file_get_contents('php://input'),true);
+                    if($method == 'PUT') {
+                        if($input['token'] == null || $input['token'] == '') {
+                            header("HTTP/1.1 400 Bad Request");
+                            print json_encode(['errormesg'=>"Token is not set."]);
+                            exit;
+                        }
+
+                        $name2 = null;
+                        $st25 = $mysqli->prepare('select * from user where token=?');
+                        $st25->bind_param('s',$input['token']);
+                        $st25->execute();
+                        $res25 = $st25->get_result();
+                        if($row4=$res25->fetch_assoc()) {
+                            $name2 = $row4['onoma'];
+                        }
+
+                        if($name2 == null ) {
+                            header("HTTP/1.1 400 Bad Request");
+                            print json_encode(['errormesg'=>"You are not a player of this game."]);
+                            exit;
+                        }
+                        
+                        $st26 = $mysqli->prepare('select * from game_status');
+                        $st26->execute();
+                        $res26 = $st26->get_result();
+                        $status3 = $res26->fetch_assoc();
+
+                        if($status3['status']!='started') {
+                            header("HTTP/1.1 400 Bad Request");
+                            print json_encode(['errormesg'=>"Game is not in action."]);
+                            exit;
+                        }
+                        if($status3['player_turn']!=$name2) {
+                            header("HTTP/1.1 400 Bad Request");
+                            print json_encode(['errormesg'=>"It is not your turn."]);
+                            exit;
+                        }
+
+                        $name2_sql = "$name2" . '_win()';
+                        
+
                     }
                     else{
                         header('HTTP/1.1 405 Method Not Allowed'); 
