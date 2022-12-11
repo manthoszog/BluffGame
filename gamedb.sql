@@ -16,6 +16,31 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `bluff_table`
+--
+
+DROP TABLE IF EXISTS `bluff_table`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `bluff_table` (
+  `id1` int(11) NOT NULL,
+  `id2` int(11) DEFAULT NULL,
+  `id1_bluff` int(11) DEFAULT NULL,
+  `id2_bluff` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id1`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `bluff_table`
+--
+
+LOCK TABLES `bluff_table` WRITE;
+/*!40000 ALTER TABLE `bluff_table` DISABLE KEYS */;
+/*!40000 ALTER TABLE `bluff_table` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `game_status`
 --
 
@@ -36,7 +61,7 @@ CREATE TABLE `game_status` (
 
 LOCK TABLES `game_status` WRITE;
 /*!40000 ALTER TABLE `game_status` DISABLE KEYS */;
-INSERT INTO `game_status` VALUES ('not active',NULL,NULL,'2022-12-10 15:25:16');
+INSERT INTO `game_status` VALUES ('not active',NULL,NULL,'2022-12-10 18:00:06');
 /*!40000 ALTER TABLE `game_status` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -291,4 +316,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-10 17:54:47
+-- Dump completed on 2022-12-11 17:10:28
