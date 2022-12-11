@@ -141,7 +141,95 @@
                         print json_encode(['Message'=>"$name cards: $bluff_cards"]);
                         print json_encode(['Message'=>"Opponent: Bluff, yes or no?"]);
 
+                        //move ends
+
+                        //update player turn
+                        if($name == 'player1'){
+                            $name = 'player2';
+                            $st18 = $mysqli->prepare('update game_status set player_turn=?');
+                            $st18->bind_param('s',$name);
+                            $st18->execute();
+                        }
+                        else if($name == 'player2'){
+                            $name = 'player1';
+                            $st18 = $mysqli->prepare('update game_status set player_turn=?');
+                            $st18->bind_param('s',$name);
+                            $st18->execute();
+                        }
+                        //update ends
+
+                        //check if game ended
+
+                        $st21 = $mysqli->query('select count(*) as c from player1_karta');
+                        $res21 = $st21->get_result();
+                        $p1count = $res21->fetch_assoc();
+
+                        $st22 = $mysqli->query('select count(*) as c from player2_karta');
+                        $res22 = $st22->get_result();
+                        $p2count = $res22->fetch_assoc();
+
+                        if($p1count['c'] == 0){
+                            $mysqli->query("update game_status set status='ended',player_turn=null,result='player1'");
+                            header('Content-type: application/json');
+                            print json_encode(['Message'=>"Winner: Player1"]);
+                            exit;
+                        }
                         
+                        if($p2count['c'] == 0){
+                            $mysqli->query("update game_status set status='ended',player_turn=null,result='player2'");
+                            header('Content-type: application/json');
+                            print json_encode(['Message'=>"Winner: Player2"]);
+                            exit;
+                        }
+
+                        //check ends
+                    }
+                    else{
+                        header('HTTP/1.1 405 Method Not Allowed'); 
+                    }
+                    break;
+                case 'bluff':
+                    if($method == 'PUT') {
+                        $answer = json_decode(file_get_contents('php://input'),true);
+
+                        if($input['token'] == null || $input['token'] == '') {
+                            header("HTTP/1.1 400 Bad Request");
+                            print json_encode(['errormesg'=>"Token is not set."]);
+                            exit;
+                        }
+
+                        $name2 = null;
+                        $st25 = $mysqli->prepare('select * from user where token=?');
+                        $st25->bind_param('s',$input['token']);
+                        $st25->execute();
+                        $res25 = $st25->get_result();
+                        if($row4=$res25->fetch_assoc()) {
+                            $name2 = $row4['onoma'];
+                        }
+
+                        if($name2 == null ) {
+                            header("HTTP/1.1 400 Bad Request");
+                            print json_encode(['errormesg'=>"You are not a player of this game."]);
+                            exit;
+                        }
+                        
+                        $st26 = $mysqli->prepare('select * from game_status');
+                        $st26->execute();
+                        $res26 = $st26->get_result();
+                        $status3 = $res26->fetch_assoc();
+
+                        if($status3['status']!='started') {
+                            header("HTTP/1.1 400 Bad Request");
+                            print json_encode(['errormesg'=>"Game is not in action."]);
+                            exit;
+                        }
+                        if($status3['player_turn']!=$name2) {
+                            header("HTTP/1.1 400 Bad Request");
+                            print json_encode(['errormesg'=>"It is not your turn."]);
+                            exit;
+                        }
+
+                        $name2_sql = "$name2" . '_win()';
                         
                         switch($answer['bluff']){
                             case 'yes':
@@ -185,100 +273,16 @@
                                 }
                                 break;
                             case 'no':
-                                if($name == 'player1'){
-                                    $name = 'player2';
-                                    $st18 = $mysqli->prepare('update game_status set player_turn=?');
-                                    $st18->bind_param('s',$name);
-                                    $st18->execute();
-                                }
-                                else if($name == 'player2'){
-                                    $name = 'player1';
-                                    $st18 = $mysqli->prepare('update game_status set player_turn=?');
-                                    $st18->bind_param('s',$name);
-                                    $st18->execute();
-                                }
-                                break;
+                                /* to paixnidi synexizetai, 
+                                o paiktis prepei tora 
+                                na rixei xartia me to PUT /cards/play
+                                */
+                                exit;
                             default:
                                 header("HTTP/1.1 400 Bad Request");
                                 print json_encode(['errormesg'=>"Wrong answer"]);
                                 exit;
                         }
-
-                        //move ends
-
-                        //check if game ended
-
-                        $st21 = $mysqli->query('select count(*) as c from player1_karta');
-                        $res21 = $st21->get_result();
-                        $p1count = $res21->fetch_assoc();
-
-                        $st22 = $mysqli->query('select count(*) as c from player2_karta');
-                        $res22 = $st22->get_result();
-                        $p2count = $res22->fetch_assoc();
-
-                        if($p1count['c'] == 0){
-                            $mysqli->query("update game_status set status='ended',player_turn=null,result='player1'");
-                            header('Content-type: application/json');
-                            print json_encode(['Message'=>"Winner: Player1"]);
-                            exit;
-                        }
-                        
-                        if($p2count['c'] == 0){
-                            $mysqli->query("update game_status set status='ended',player_turn=null,result='player2'");
-                            header('Content-type: application/json');
-                            print json_encode(['Message'=>"Winner: Player2"]);
-                            exit;
-                        }
-
-                        //check ends
-                    }
-                    else{
-                        header('HTTP/1.1 405 Method Not Allowed'); 
-                    }
-                    break;
-                case 'bluff':
-                    $answer = json_decode(file_get_contents('php://input'),true);
-                    if($method == 'PUT') {
-                        if($input['token'] == null || $input['token'] == '') {
-                            header("HTTP/1.1 400 Bad Request");
-                            print json_encode(['errormesg'=>"Token is not set."]);
-                            exit;
-                        }
-
-                        $name2 = null;
-                        $st25 = $mysqli->prepare('select * from user where token=?');
-                        $st25->bind_param('s',$input['token']);
-                        $st25->execute();
-                        $res25 = $st25->get_result();
-                        if($row4=$res25->fetch_assoc()) {
-                            $name2 = $row4['onoma'];
-                        }
-
-                        if($name2 == null ) {
-                            header("HTTP/1.1 400 Bad Request");
-                            print json_encode(['errormesg'=>"You are not a player of this game."]);
-                            exit;
-                        }
-                        
-                        $st26 = $mysqli->prepare('select * from game_status');
-                        $st26->execute();
-                        $res26 = $st26->get_result();
-                        $status3 = $res26->fetch_assoc();
-
-                        if($status3['status']!='started') {
-                            header("HTTP/1.1 400 Bad Request");
-                            print json_encode(['errormesg'=>"Game is not in action."]);
-                            exit;
-                        }
-                        if($status3['player_turn']!=$name2) {
-                            header("HTTP/1.1 400 Bad Request");
-                            print json_encode(['errormesg'=>"It is not your turn."]);
-                            exit;
-                        }
-
-                        $name2_sql = "$name2" . '_win()';
-                        
-
                     }
                     else{
                         header('HTTP/1.1 405 Method Not Allowed'); 
