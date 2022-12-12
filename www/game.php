@@ -132,13 +132,14 @@
                         $st27->bind_param('ii',$input['id1_bluff'],$input['id2_bluff']);
                         $st27->execute();
                         $res27 = $st27->get_result();
-                        $bluff_cards = $res27->fetch_assoc();
+                        
                         
                         $st17 = $mysqli->prepare("delete from $name_sql where id in (select id from stoiva_karta)");
                         $st17->execute();
 
                         header('Content-type: application/json');
-                        print json_encode(['Message'=>"$name played cards: $bluff_cards"]);
+                        print json_encode(['Message'=>"$name played cards: \n"]);
+                        print json_encode($res27->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
                         print json_encode(['Message'=>"Opponent: Bluff, yes or no?"]);
 
                         $st28 = $mysqli->prepare('insert into bluff_table(id1,id2,id1_bluff,id2_bluff) values(?,?,?,?)');
