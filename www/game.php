@@ -138,7 +138,7 @@
                         $st17->execute();
 
                         header('Content-type: application/json');
-                        print json_encode(['Message'=>"$name played cards: \n"]);
+                        print json_encode(['Message'=>"$name played cards: "]);
                         print json_encode($res27->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
                         print json_encode(['Message'=>"Opponent: Bluff, yes or no?"]);
 
@@ -165,13 +165,15 @@
 
                         //check if game ended
 
-                        $st21 = $mysqli->query('select count(*) as c from player1_karta');
-                        $res21 = $st21->get_result();
-                        $p1count = $res21->fetch_assoc();
+                        $st221 = $mysqli->prepare('select count(*) as c from player1_karta');
+                        $st221->execute();
+                        $res221 = $st221->get_result();
+                        $p1count = $res221->fetch_assoc();
 
-                        $st22 = $mysqli->query('select count(*) as c from player2_karta');
-                        $res22 = $st22->get_result();
-                        $p2count = $res22->fetch_assoc();
+                        $st222 = $mysqli->prepare('select count(*) as c from player2_karta');
+                        $st222->execute();
+                        $res222 = $st222->get_result();
+                        $p2count = $res222->fetch_assoc();
 
                         if($p1count['c'] == 0){
                             $mysqli->query("update game_status set status='ended',player_turn=null,result='player1'");
@@ -236,7 +238,8 @@
                         
                         switch($answer['bluff']){
                             case 'yes':
-                                $st29 = $mysqli->query('select * from bluff_table');
+                                $st29 = $mysqli->prepare('select * from bluff_table');
+                                $st29->execute();
                                 $res29 = $st29->get_result();
                                 $tableb = $res29->fetch_assoc();
                                 if(($tableb['id1'] == $tableb['id1_bluff']) &&  ($tableb['id2'] == $tableb['id2_bluff'])){
