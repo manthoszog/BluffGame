@@ -267,6 +267,7 @@
                                             $mysqli->query('call player2_win()');
                                             break;
                                     }
+                                    $mysqli->query('delete from bluff_table');
                                     /* to paixnidi synexizetai, 
                                     o idios paiktis prepei tora 
                                     na rixei xartia me to PUT /cards/play
@@ -278,8 +279,10 @@
                                 o idios paiktis prepei tora 
                                 na rixei xartia me to PUT /cards/play
                                 */
+                                $mysqli->query('delete from bluff_table');
                                 exit;
                             default:
+                                $mysqli->query('delete from bluff_table');
                                 header("HTTP/1.1 400 Bad Request");
                                 print json_encode(['errormesg'=>"Wrong answer"]);
                                 exit;
