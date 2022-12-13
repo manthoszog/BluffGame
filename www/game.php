@@ -39,20 +39,16 @@
                         header('Content-type: application/json');
                         print json_encode($result->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
 
-                        //header('Content-type: application/json');
                         print json_encode(['Message'=>"Player 2 Cards:"]);
                         $st2 = $mysqli->prepare('select * from player2_karta');
                         $st2->execute();
                         $result2 = $st2->get_result();
-                        //header('Content-type: application/json');
                         print json_encode($result2->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
 
-                        //header('Content-type: application/json');
                         print json_encode(['Message'=>"Cards on table:"]);
                         $st3 = $mysqli->prepare('select * from stoiva_karta');
                         $st3->execute();
                         $result3 = $st3->get_result();
-                        //header('Content-type: application/json');
                         print json_encode($result3->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
                     }
                     else if($method == 'POST') {
