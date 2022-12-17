@@ -330,7 +330,7 @@
                     $r5 = $res5->fetch_all(MYSQLI_ASSOC);
                     if($r5[0]['c']>0) {
                         header("HTTP/1.1 400 Bad Request");
-                        print json_encode(['errormesg'=>"Player $username is already set. Please select another color."]);
+                        print json_encode(['errormesg'=>"Player $username is already set."]);
                         exit;
                     }
                 
