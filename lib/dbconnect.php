@@ -5,7 +5,7 @@
 
     $user=$DB_USER;
     $pass=$DB_PASS;
-    $user2 = $DB_USER2;
+    $user2=$DB_USER2;
 
 
     if(gethostname()=='users.iee.ihu.gr') {
