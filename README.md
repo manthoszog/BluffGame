@@ -53,7 +53,8 @@ https://users.iee.ihu.gr/~it185179/ADISE22_Bluff_MZog/www/game.php/
 ```
     <?php
 	$DB_PASS = 'κωδικός';
-	$DB_USER = 'όνομα χρήστη';
+	$DB_USER = 'όνομα χρήστη για τοπική βάση';
+	$DB_USER2 = 'όνομα χρήστη για απομακρυσμένη βάση';
     ?>
 ```
 
