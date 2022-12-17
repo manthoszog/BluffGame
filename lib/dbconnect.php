@@ -5,11 +5,11 @@
 
     $user=$DB_USER;
     $pass=$DB_PASS;
-    $user2=$DB_USER2;
 
 
     if(gethostname()=='users.iee.ihu.gr') {
-        $mysqli = new mysqli($host, $user2, $pass, $db,null,'/home/student/it/2018/it185179/mysql/run/mysql.sock');
+        $user = 'it185179';
+        $mysqli = new mysqli($host, $user, $pass, $db,null,'/home/student/it/2018/it185179/mysql/run/mysql.sock');
     } 
     else {
         $pass=null;
