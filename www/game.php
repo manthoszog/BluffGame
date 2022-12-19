@@ -94,11 +94,27 @@
                             print json_encode(['errormesg'=>"Game is not in action."]);
                             exit;
                         }
+
                         if($status2['player_turn']!=$name) {
                             header("HTTP/1.1 400 Bad Request");
                             print json_encode(['errormesg'=>"It is not your turn."]);
                             exit;
                         }
+
+                        //check if aborted
+                        $st90=$mysqli->prepare("select count(*) as aborted from user where (last_action < (NOW() - INTERVAL 5 MINUTE)) and (onoma=$name)");
+                        $st90->execute();
+                        $res90 = $st90->get_result();
+                        $aborted2 = $res90->fetch_assoc()['aborted'];
+                        if($aborted2 > 0) {
+                            $mysqli->query("delete from user where onoma=$name");
+                            $mysqli->query("update game_status set status='aborted',player_turn=null");
+
+                            header("HTTP/1.1 400 Bad Request");
+                            print json_encode(['errormesg'=>"$name aborted."]);
+                            exit;
+                        }
+                        //check ends
 
 
                         //move cards
@@ -231,6 +247,21 @@
                             print json_encode(['errormesg'=>"It is not your turn."]);
                             exit;
                         }
+
+                        //check if aborted
+                        $st900=$mysqli->prepare("select count(*) as aborted from user where (last_action < (NOW() - INTERVAL 5 MINUTE)) and (onoma=$name2)");
+                        $st900->execute();
+                        $res900 = $st900->get_result();
+                        $aborted3 = $res900->fetch_assoc()['aborted'];
+                        if($aborted3 > 0) {
+                            $mysqli->query("delete from user where onoma=$name2");
+                            $mysqli->query("update game_status set status='aborted',player_turn=null");
+
+                            header("HTTP/1.1 400 Bad Request");
+                            print json_encode(['errormesg'=>"$name2 aborted."]);
+                            exit;
+                        }
+                        //check ends
                         
                         switch($answer['bluff']){
                             case 'yes':
