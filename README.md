@@ -143,7 +143,7 @@ PUT /cards/
 #### Παίξιμο χαρτιών
 
 ```
-PUT /cards/play/
+PUT /cards/play/{id1}/{id2}/{id1_bluff}/{id2_bluff}
 ```
 Json Data:
 
@@ -165,7 +165,7 @@ Json Data:
 #### Μπλόφα
 
 ```
-PUT /cards/bluff/
+PUT /cards/bluff/{bluff}
 ```
 Json Data:
 
