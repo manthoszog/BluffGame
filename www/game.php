@@ -102,10 +102,10 @@
                         }
 
                         //check if aborted
-                        $st90=$mysqli->query("select count(*) as aborted from user where (last_action < (NOW() - INTERVAL 5 MINUTE)) and (onoma=$name)");
-                        //$st90->execute();
-                        $res90 = $st90->get_result();
-                        $aborted2 = $res90->fetch_assoc()['aborted'];
+                        $st91=$mysqli->query("select count(*) as aborted from user where last_action < (NOW() - INTERVAL 5 MINUTE) and onoma=$name");
+                        //$st91->execute();
+                        $res91 = $st91->get_result();
+                        $aborted2 = $res91->fetch_assoc()['aborted'];
                         if($aborted2 > 0) {
                             $mysqli->query("delete from user where onoma=$name");
                             $mysqli->query("update game_status set status='aborted',player_turn=null");
