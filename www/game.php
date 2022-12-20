@@ -106,13 +106,15 @@
                         $st91->execute();
                         $res91 = $st91->get_result();
                         $aborted2 = $res91->fetch_assoc();
-                        if($aborted2['onoma'] == $name) {
-                            $mysqli->query("delete from user where onoma=$name");
-                            $mysqli->query("update game_status set status='aborted',player_turn=null");
+                        if($aborted2){
+                            if($aborted2['onoma'] == $name) {
+                                $mysqli->query("delete from user where onoma=$name");
+                                $mysqli->query("update game_status set status='aborted',player_turn=null");
 
-                            header("HTTP/1.1 400 Bad Request");
-                            print json_encode(['errormesg'=>"$name aborted."]);
-                            exit;
+                                header("HTTP/1.1 400 Bad Request");
+                                print json_encode(['errormesg'=>"$name aborted."]);
+                                exit;
+                            }
                         }
                         //check ends
 
@@ -253,13 +255,15 @@
                         $st900->execute();
                         $res900 = $st900->get_result();
                         $aborted3 = $res900->fetch_assoc();
-                        if($aborted3['onoma'] == $name2) {
-                            $mysqli->query("delete from user where onoma=$name2");
-                            $mysqli->query("update game_status set status='aborted',player_turn=null");
+                        if($aborted3){
+                            if($aborted3['onoma'] == $name2) {
+                                $mysqli->query("delete from user where onoma=$name2");
+                                $mysqli->query("update game_status set status='aborted',player_turn=null");
 
-                            header("HTTP/1.1 400 Bad Request");
-                            print json_encode(['errormesg'=>"$name2 aborted."]);
-                            exit;
+                                header("HTTP/1.1 400 Bad Request");
+                                print json_encode(['errormesg'=>"$name2 aborted."]);
+                                exit;
+                            }
                         }
                         //check ends
                         
