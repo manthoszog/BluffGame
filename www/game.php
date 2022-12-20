@@ -25,6 +25,8 @@
         $input['token'] = $t2['token'];
     }
 
+    $b = null;
+
     switch($req=array_shift($request)){
         case 'cards':
             switch($req3=array_shift($request)){
@@ -118,6 +120,20 @@
                         }
                         //check ends
 
+                        //check
+                        //elegxos an o antipalos paei na rixei xartia xoris na exei apantisei prota gia ti blofa
+
+                        if(($b == null) || ($b == true)){
+                            $b == false;
+                            // tora mporei na rixei xartia kanonika
+                        }
+                        else{
+                            header("HTTP/1.1 400 Bad Request");
+                            print json_encode(['errormesg'=>"Answer for bluff before playing."]);
+                            exit;
+                        }
+
+                        //check ends
 
                         //move cards
 
@@ -269,6 +285,7 @@
                         
                         switch($answer['bluff']){
                             case 'yes':
+                                $b = true;
                                 $st29 = $mysqli->prepare('select * from bluff_table');
                                 $st29->execute();
                                 $res29 = $st29->get_result();
@@ -306,6 +323,7 @@
                                 }
                                 break;
                             case 'no':
+                                $b = true;
                                 /* to paixnidi synexizetai, 
                                 o idios paiktis prepei tora 
                                 na rixei xartia me to PUT /cards/play
