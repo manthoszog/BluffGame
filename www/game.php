@@ -102,8 +102,8 @@
                         }
 
                         //check if aborted
-                        $st90=$mysqli->prepare("select count(*) as aborted from user where (last_action < (NOW() - INTERVAL 5 MINUTE)) and (onoma=$name)");
-                        $st90->execute();
+                        $st90=$mysqli->query("select count(*) as aborted from user where (last_action < (NOW() - INTERVAL 5 MINUTE)) and (onoma=$name)");
+                        //$st90->execute();
                         $res90 = $st90->get_result();
                         $aborted2 = $res90->fetch_assoc()['aborted'];
                         if($aborted2 > 0) {
