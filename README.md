@@ -64,7 +64,7 @@ https://users.iee.ihu.gr/~it185179/ADISE22_Bluff_MZog/www/game.php/
 # Περιγραφή Παιχνιδιού
 
 ## Κανόνες Παιχνιδιού
-<p align="justify" justify="inter-word">
+<p style="text-align:justify;text-justify:inter-word;">
 Η μπλόφα παίζεται ως εξής: 
 
 Σε κάθε παίκτη μοιράζεται ίσος αριθμός χαρτιών ή μπορεί να μοιραστεί το σύνολο της τράπουλας μέχρι να τελειώσει.
